@@ -26,6 +26,7 @@ public abstract class FlourTweaker implements ITweaker {
         this.args = new ArrayList<>();
         this.flourLoader = new FlourLoader();
         flourLoader.setGameDir(gameDir);
+        flourLoader.setClient(isClient());
         addOptions(args, gameDir, assetsDir, profile);
     }
 

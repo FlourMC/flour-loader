@@ -20,7 +20,8 @@ repositories {
 }
 
 dependencies {
-    compile'org.spongepowered:mixin:0.8'
+    compile 'org.spongepowered:mixin:0.8'
     compile 'net.minecraft:launchwrapper:1.12'
     compile 'com.alibaba:fastjson:1.2.72'
+    compile 'org.plugface:plugface-core:0.7.1'
 }
