@@ -21,11 +21,9 @@ import java.util.jar.JarFile;
  */
 public class ModManager {
 
-    private final File modPath;
     private ArrayList<ModInitializer> mods;
 
     public ModManager(File modPath) {
-        this.modPath = modPath;
         mods = new ArrayList<>();
         if (!modPath.isDirectory())
             modPath.mkdir();
@@ -53,13 +51,12 @@ public class ModManager {
         }
     }
 
-    public static void addURL(URL u) throws IOException {
-        URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class<?> sysclass = URLClassLoader.class;
+    public static void addURL(URL url)  {
+        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
         try {
-            Method method = sysclass.getDeclaredMethod("addURL", new Class[] { URL.class });
+            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
-            method.invoke(sysloader, new Object[] { u });
+            method.invoke(systemClassLoader, url);
         } catch (Throwable t) {
             t.printStackTrace();
         }
