@@ -1,15 +1,9 @@
 package cn.enaium.flourmc.loader;
 
-import cn.enaium.flourmc.loader.mod.ModManager;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import cn.enaium.flourmc.loader.api.ModInitializer;
+import cn.enaium.flourmc.loader.manager.ModManager;
 
 import java.io.File;
-import java.net.URLClassLoader;
-import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * Project: flour-loader
@@ -17,16 +11,9 @@ import java.util.Scanner;
  * Copyright © 2020 | Enaium | All rights reserved.
  */
 public class FlourLoaderTest {
-
-    protected static Logger LOGGER = LogManager.getFormatterLogger("Flour|Loader");
+    private static ModManager modManager = new ModManager(new File("FlourMods"));
 
     public static void main(String[] args) {
-        LOGGER.info("Flour loading...");
-        ModManager modManager = ModManager.getInstance();
-        try {
-            modManager.load(new File( "FlourMods"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        modManager.getMods().forEach(ModInitializer::onInitialize);
     }
 }

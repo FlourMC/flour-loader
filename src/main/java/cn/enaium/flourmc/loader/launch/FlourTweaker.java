@@ -3,9 +3,6 @@ package cn.enaium.flourmc.loader.launch;
 import cn.enaium.flourmc.loader.FlourLoader;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,9 +21,7 @@ public abstract class FlourTweaker implements ITweaker {
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
         this.args = new ArrayList<>();
-        this.flourLoader = new FlourLoader();
-        flourLoader.setGameDir(gameDir);
-        flourLoader.setClient(isClient());
+        flourLoader = new FlourLoader(gameDir);
         addOptions(args, gameDir, assetsDir, profile);
     }
 
@@ -43,8 +38,6 @@ public abstract class FlourTweaker implements ITweaker {
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
-//        MixinBootstrap.init();
-//        MixinEnvironment.getDefaultEnvironment().setSide(isClient() ? MixinEnvironment.Side.CLIENT : MixinEnvironment.Side.SERVER);
         flourLoader.load();
     }
 
