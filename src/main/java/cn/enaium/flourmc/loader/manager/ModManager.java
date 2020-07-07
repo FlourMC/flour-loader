@@ -2,6 +2,7 @@ package cn.enaium.flourmc.loader.manager;
 
 import cn.enaium.flourmc.loader.annotations.FlourMod;
 import cn.enaium.flourmc.loader.api.ModInitializer;
+import com.alibaba.fastjson.JSON;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -22,16 +24,18 @@ import java.util.jar.JarFile;
 public class ModManager {
 
     private ArrayList<ModInitializer> mods;
+    private ArrayList<String> mixins;
 
     public ModManager(File modPath) {
         mods = new ArrayList<>();
+        mixins = new ArrayList<>();
         if (!modPath.isDirectory())
             modPath.mkdir();
         for (File file : Objects.requireNonNull(modPath.listFiles())) {
             try {
                 JarFile jar = new JarFile(file);
                 Enumeration<JarEntry> entries = jar.entries();
-                addURL(file.toURL());
+                addURL(file.toURI().toURL());
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
                     if (entry.getName().endsWith(".class")) {
@@ -42,6 +46,13 @@ public class ModManager {
                         if (clazz.getAnnotation(FlourMod.class) != null) {
                             mods.add((ModInitializer) clazz.newInstance());
                         }
+                    } else if (entry.getName().equals("flour.mod.json")) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        Scanner scanner = new Scanner(jar.getInputStream(entry));
+                        while (scanner.hasNext()) {
+                            stringBuilder.append(scanner.next());
+                        }
+                        mixins.add(JSON.parseObject(stringBuilder.toString()).getString("mixin"));
                     }
                 }
                 jar.close();
@@ -51,7 +62,7 @@ public class ModManager {
         }
     }
 
-    public static void addURL(URL url)  {
+    public static void addURL(URL url) {
         URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
         try {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
@@ -65,5 +76,9 @@ public class ModManager {
 
     public ArrayList<ModInitializer> getMods() {
         return mods;
+    }
+
+    public ArrayList<String> getMixins() {
+        return mixins;
     }
 }
