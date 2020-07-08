@@ -1,7 +1,7 @@
 package cn.enaium.flourmc.loader.api;
 
 /**
- * Project: flout-loader
+ * Project: flour-loader
  * -----------------------------------------------------------
  * Copyright © 2020 | Enaium | All rights reserved.
  */
