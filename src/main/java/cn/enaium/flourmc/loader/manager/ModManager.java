@@ -3,9 +3,10 @@ package cn.enaium.flourmc.loader.manager;
 import cn.enaium.flourmc.loader.annotations.FlourMod;
 import cn.enaium.flourmc.loader.api.ModInitializer;
 import com.alibaba.fastjson.JSON;
-
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.MixinEnvironment;
+import org.spongepowered.asm.mixin.Mixins;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -56,8 +57,8 @@ public class ModManager {
                     }
                 }
                 jar.close();
-            } catch (IOException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
         }
     }
@@ -72,7 +73,6 @@ public class ModManager {
             t.printStackTrace();
         }
     }
-
 
     public ArrayList<ModInitializer> getMods() {
         return mods;

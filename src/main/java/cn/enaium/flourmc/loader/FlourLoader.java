@@ -2,6 +2,10 @@ package cn.enaium.flourmc.loader;
 
 import cn.enaium.flourmc.loader.api.ModInitializer;
 import cn.enaium.flourmc.loader.manager.ModManager;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.MixinEnvironment;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.File;
 
@@ -19,5 +23,8 @@ public class FlourLoader {
 
     public void load() {
         modManager.getMods().forEach(ModInitializer::onInitialize);
+        MixinBootstrap.init();
+        modManager.getMixins().forEach(Mixins::addConfiguration);
+        MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
     }
 }
