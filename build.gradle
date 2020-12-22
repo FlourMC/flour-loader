@@ -9,12 +9,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    jcenter()
     maven {
         name = 'SpongePowered'
         url = 'http://repo.spongepowered.org/maven'
     }
     maven {
-        name = 'mojang'
+        name = 'minecraft'
         url = 'https://libraries.minecraft.net/'
     }
 }
@@ -23,5 +24,4 @@ dependencies {
     compile 'org.spongepowered:mixin:0.8'
     compile 'net.minecraft:launchwrapper:1.12'
     compile 'com.alibaba:fastjson:1.2.72'
-    compile 'org.plugface:plugface-core:0.7.1'
 }
