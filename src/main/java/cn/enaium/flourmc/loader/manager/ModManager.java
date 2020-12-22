@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -43,9 +44,13 @@ public class ModManager {
                         String className = entry.getName().substring(0, entry.getName().length() - 6);
                         className = className.replace('/', '.');
 //                        Class<?> clazz = new URLClassLoader(new URL[]{file.toURL()}, Thread.currentThread().getContextClassLoader()).loadClass(className);
-                        Class<?> clazz = Class.forName(className, true, ClassLoader.getSystemClassLoader());
-                        if (clazz.getAnnotation(FlourMod.class) != null) {
-                            mods.add((ModInitializer) clazz.newInstance());
+                        try {
+                            Class<?> clazz = Class.forName(className, true, ClassLoader.getSystemClassLoader());
+                            if (clazz.getAnnotation(FlourMod.class) != null) {
+                                mods.add((ModInitializer) clazz.newInstance());
+                            }
+                        }catch (Throwable ignored) {
+
                         }
                     } else if (entry.getName().equals("flour.mod.json")) {
                         StringBuilder stringBuilder = new StringBuilder();
@@ -53,7 +58,9 @@ public class ModManager {
                         while (scanner.hasNext()) {
                             stringBuilder.append(scanner.next());
                         }
-                        mixins.add(JSON.parseObject(stringBuilder.toString()).getString("mixin"));
+                        String mixin = JSON.parseObject(stringBuilder.toString()).getString("mixin");
+                        System.out.println("Mixin:" + mixin + " Loading...| FlourMC");
+                        mixins.add(mixin);
                     }
                 }
                 jar.close();
